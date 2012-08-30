@@ -2,7 +2,7 @@
 
 import math
 from matplotlib import pyplot
-from decimal import Decimal
+#from decimal import Decimal
 
 #A Za joint.
 
@@ -66,13 +66,16 @@ def prob_atleastonemiss(num_atomic_independent_outcomes, num_trials):
     """
     compound_probs = []
     for k in range(1, num_atomic_independent_outcomes):
-        atomic_probability = ((num_atomic_independent_outcomes-k))/(num_atomic_independent_outcomes)
+        sign = (-1)**(k+1)
+        atomic_probability = ((num_atomic_independent_outcomes-k)*1.0)/(num_atomic_independent_outcomes*1.0)
         print "atomic_probability: %s" % atomic_probability
         num_events = choose(num_atomic_independent_outcomes, k)
         print "num_events is %s" % num_events
-        compound_prob = [(-1)**(k+1) * (atomic_probability**num_trials)]*num_events
+        logRHS = math.log(num_events) + num_trials * math.log(atomic_probability)
+        compound_prob = sign * math.exp(logRHS)
+        #compound_prob = num_events * atomic_probability**num_trials
         #print "compound_prob: %s" % compound_prob
-        compound_probs= compound_probs+compound_prob
+        compound_probs.append(compound_prob)
         #print compound_probs
     probofunion = sum(compound_probs)
     return probofunion
@@ -90,8 +93,8 @@ def grapher(NUMBERSTATES):
 
 def main():
     import sys
-    N = Decimal(sys.argv[1])
-    t = Decimal(sys.argv[2])
+    N = int(sys.argv[1])
+    t = int(sys.argv[2])
 
     print "The probability of not seeing a particular event on a trial is:\t %s." % ( (N-1) / N)
     print "The number of mutually exclusive identically probable outcomes is:\t %s." % N
