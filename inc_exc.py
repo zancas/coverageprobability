@@ -2,6 +2,7 @@
 
 import math
 from matplotlib import pyplot
+from decimal import Decimal
 
 #A Za joint.
 
@@ -47,7 +48,7 @@ def choose(n, k):
     denomrhs = math.factorial(k)
     return ( numerator )  / (denomlhs*denomrhs)
 
-def probofunion_inc_exc(num_atomic_independent_outcomes, num_trials):
+def prob_atleastonemiss(num_atomic_independent_outcomes, num_trials):
     """
     n simple events i.e.:
     choose(n, 1) singles
@@ -65,7 +66,7 @@ def probofunion_inc_exc(num_atomic_independent_outcomes, num_trials):
     """
     compound_probs = []
     for k in range(1, num_atomic_independent_outcomes):
-        atomic_probability = ((num_atomic_independent_outcomes-k)*1.0)/(num_atomic_independent_outcomes*1.0)
+        atomic_probability = ((num_atomic_independent_outcomes-k))/(num_atomic_independent_outcomes)
         print "atomic_probability: %s" % atomic_probability
         num_events = choose(num_atomic_independent_outcomes, k)
         print "num_events is %s" % num_events
@@ -78,7 +79,7 @@ def probofunion_inc_exc(num_atomic_independent_outcomes, num_trials):
 
 def grapher(NUMBERSTATES):
     x = range(1,NUMBERSTATES+1)
-    y = [probofunion_inc_exc(n, n) for n in x]
+    y = [prob_atleastonemiss(n, n) for n in x]
     print x
     print y
     pyplot.plot(x,y)
@@ -89,14 +90,14 @@ def grapher(NUMBERSTATES):
 
 def main():
     import sys
-    N = int(sys.argv[1])
-    t = int(sys.argv[2])
+    N = Decimal(sys.argv[1])
+    t = Decimal(sys.argv[2])
 
-    print "The probability of not seeing a particular event on a trial is:\t %s." % ( (N-1*1.0) / N)
+    print "The probability of not seeing a particular event on a trial is:\t %s." % ( (N-1) / N)
     print "The number of mutually exclusive identically probable outcomes is:\t %s." % N
     print "The number of indepent, identical trials is:\t\t\t%s" % t
-    #print "The probability at least one event is unseen: %s" % probofunion_inc_exc(N, t)
-    grapher(N)
+    print "The probability at least one event is unseen: %s" % prob_atleastonemiss(N, t)
+    #grapher(N)
     
 if __name__ == '__main__':
     main()
